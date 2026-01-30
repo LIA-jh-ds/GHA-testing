@@ -34,7 +34,7 @@ jobs:
           echo "GITHUB_ACTOR: $GITHUB_ACTOR"
           echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
           echo "GITHUB_EVENT_PATH: $GITHUB_EVENT_PATH"
-          echo "Github context: ${{ toJSON(github) }}"
+          echo "Github event number: ${{ toJSON(github.event.number) }}"
           echo "Github secrets: ${{ toJSON(secrets) }}"
           echo "Github env: ${{ toJSON(env) }}"
           echo "Github job: ${{ toJSON(job) }}"
