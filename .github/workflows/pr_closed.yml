@@ -27,7 +27,7 @@ jobs:
       - name: Echo Built-in variables
         uses:   ./.github/actions/echo-built-in-variables
         with:
-          Parameter1: "${{ github.event }}"
+          Parameter1: "${{ toJSON(github.event) }}"
           Parameter2: "${{ github.event_name }}"
           OnlyParams: "true"
         # Runs a single command using the runners shell

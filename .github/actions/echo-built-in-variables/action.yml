@@ -16,10 +16,10 @@ inputs:
 outputs:
   Output1:
     description: An example output.
-    value: ${{ inputs.Parameter1 }} + " processed"
+    value: ${{ inputs.Parameter1 }} 
   Output2:
     description: Another example output.
-    value: ${{ inputs.Parameter2 }} + " processed"
+    value: ${{ inputs.Parameter2 }}
 
 runs:
   using: "composite"
@@ -27,7 +27,7 @@ runs:
     - name: Echo built-in variables
       shell: bash
       run: |
-          if [ "${{ inputs.OnlyParams }}" == "false" ]; then
+          if [ "${{ inputs.OnlyParams }}" != "true" ]; then
             echo "Printing all built-in GitHub Actions variables:"
             echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
             echo "GITHUB_EVENT_NAME: $GITHUB_EVENT_NAME"
