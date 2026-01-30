@@ -8,6 +8,10 @@ inputs:
   Parameter2:
     description: Another example parameter.
     required: true
+  OnlyParamas:
+    description: Whether to print only the input parameters.
+    required: false
+    default: "false"
 
 outputs:
   Output1:
@@ -23,17 +27,20 @@ runs:
     - name: Echo built-in variables
       shell: bash
       run: |
-          echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
-          echo "GITHUB_EVENT_NAME: $GITHUB_EVENT_NAME"
-          echo "GITHUB_REF: $GITHUB_REF"
-          echo "GITHUB_SHA: $GITHUB_SHA"
-          echo "GITHUB_ACTOR: $GITHUB_ACTOR"
-          echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
-          echo "GITHUB_EVENT_PATH: $GITHUB_EVENT_PATH"
-          echo "Github event number: ${{ toJSON(github.event.number) }}"
-          echo "Github secrets: ${{ toJSON(secrets) }}"
-          echo "Github env: ${{ toJSON(env) }}"
-          echo "Github job: ${{ toJSON(job) }}"
+          if [ "${{ inputs.OnlyParamas }}" == "false" ]; then
+            echo "Printing all built-in GitHub Actions variables:"
+            echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+            echo "GITHUB_EVENT_NAME: $GITHUB_EVENT_NAME"
+            echo "GITHUB_REF: $GITHUB_REF"
+            echo "GITHUB_SHA: $GITHUB_SHA"
+            echo "GITHUB_ACTOR: $GITHUB_ACTOR"
+            echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
+            echo "GITHUB_EVENT_PATH: $GITHUB_EVENT_PATH"
+            echo "Github event number: ${{ toJSON(github.event.number) }}"
+            echo "Github secrets: ${{ toJSON(secrets) }}"
+            echo "Github env: ${{ toJSON(env) }}"
+            echo "Github job: ${{ toJSON(job) }}"
+          fi
           echo "Input Parameter1: ${{ inputs.Parameter1 }}"
           echo "Input Parameter2: ${{ inputs.Parameter2 }}"
           echo "-----------------------------------"
