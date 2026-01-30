@@ -27,8 +27,9 @@ jobs:
       - name: Echo Built-in variables
         uses:   ./.github/actions/echo-built-in-variables
         with:
-          Parameter1: "${{ github.event.action }}"
+          Parameter1: "${{ github.event }}"
           Parameter2: "${{ github.event_name }}"
+          OnlyParamas: "true"
         # Runs a single command using the runners shell
       - name: Run a one-line script
         run: echo Hello, world! This was triggered by PR closed event!
