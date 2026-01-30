@@ -22,24 +22,14 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      # - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
 
       - name: Echo Built-in variables
-        run: |
-          echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
-          echo "GITHUB_EVENT_NAME: $GITHUB_EVENT_NAME"
-          echo "GITHUB_REF: $GITHUB_REF"
-          echo "GITHUB_SHA: $GITHUB_SHA"
-          echo "GITHUB_ACTOR: $GITHUB_ACTOR"
-          echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
-          echo "GITHUB_EVENT_PATH: $GITHUB_EVENT_PATH"
-          echo "Github event number: ${{ toJSON(github.event.number) }}"
-          echo "Github secrets: ${{ toJSON(secrets) }}"
-          echo "Github env: ${{ toJSON(env) }}"
-          echo "Github job: ${{ toJSON(job) }}"
-        
-          echo "-----------------------------------"
+        uses:   ./.github/actions/echo-built-in-variables
+        with:
+          Parameter1: "Hello world"
+          Parameter2: "Goodnight moon"
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: echo Hello, this was triggered by PR synchronize event!

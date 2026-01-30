@@ -1,0 +1,37 @@
+name: Printing built-in variables
+description: A simple action that echoes some built-in GitHub Actions variables.
+
+inputs:
+  Parameter1:
+    description: An example parameter.
+    required: false
+  Parameter2:
+    description: Another example parameter.
+    required: true
+
+outputs:
+  Output1:
+    description: An example output.
+    value: ${{ inputs.Parameter1 }} + " processed"
+  Output2:
+    description: Another example output.
+    value: ${{ inputs.Parameter2 }} + " processed"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Echo built-in variables
+      shell: bash
+      run: |
+          echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+          echo "GITHUB_EVENT_NAME: $GITHUB_EVENT_NAME"
+          echo "GITHUB_REF: $GITHUB_REF"
+          echo "GITHUB_SHA: $GITHUB_SHA"
+          echo "GITHUB_ACTOR: $GITHUB_ACTOR"
+          echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
+          echo "GITHUB_EVENT_PATH: $GITHUB_EVENT_PATH"
+          echo "Github event number: ${{ toJSON(github.event.number) }}"
+          echo "Github secrets: ${{ toJSON(secrets) }}"
+          echo "Github env: ${{ toJSON(env) }}"
+          echo "Github job: ${{ toJSON(job) }}"
+          echo "-----------------------------------"
