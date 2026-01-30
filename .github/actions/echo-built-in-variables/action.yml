@@ -34,4 +34,6 @@ runs:
           echo "Github secrets: ${{ toJSON(secrets) }}"
           echo "Github env: ${{ toJSON(env) }}"
           echo "Github job: ${{ toJSON(job) }}"
+          echo "Input Parameter1: ${{ inputs.Parameter1 }}"
+          echo "Input Parameter2: ${{ inputs.Parameter2 }}"
           echo "-----------------------------------"

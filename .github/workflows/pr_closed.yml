@@ -23,6 +23,12 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
+      # Echo Built-in variables
+      - name: Echo Built-in variables
+        uses:   ./.github/actions/echo-built-in-variables
+        with:
+          Parameter1: "${{ github.event.pull_request }}"
+          Parameter2: "${{ github.event }}"
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
