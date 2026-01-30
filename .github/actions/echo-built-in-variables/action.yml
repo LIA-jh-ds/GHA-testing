@@ -8,7 +8,7 @@ inputs:
   Parameter2:
     description: Another example parameter.
     required: true
-  OnlyParamas:
+  OnlyParams:
     description: Whether to print only the input parameters.
     required: false
     default: "false"
@@ -27,7 +27,7 @@ runs:
     - name: Echo built-in variables
       shell: bash
       run: |
-          if [ "${{ inputs.OnlyParamas }}" == "false" ]; then
+          if [ "${{ inputs.OnlyParams }}" == "false" ]; then
             echo "Printing all built-in GitHub Actions variables:"
             echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
             echo "GITHUB_EVENT_NAME: $GITHUB_EVENT_NAME"
