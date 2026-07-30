@@ -103,39 +103,40 @@ jobs:
             echo "PR #$EXISTING_PR already open -- the push above already updated it."
             echo "PR_NUMBER=$EXISTING_PR" >> "$GITHUB_OUTPUT"
           else
+            # No --label automerge here -- that label exists in the real repo
+            # (auto_merge_pr_generate.yaml relies on it) but not in this basic sandbox
+            # repo, and gh pr create fails if the label doesn't already exist.
             PR_URL=$(gh pr create --repo "${{ github.repository }}" \
               --title "[Automated] Sync '$TEST_SOURCE_BRANCH' into '$TARGET_BRANCH'" \
               --body "Automated daily sync. This PR brings '$TARGET_BRANCH' up to date with '$TEST_SOURCE_BRANCH'." \
               --head "$SYNC_BRANCH" \
-              --base "$TARGET_BRANCH" \
-              --label automerge)
+              --base "$TARGET_BRANCH")
             echo "PR_NUMBER=$(basename "$PR_URL")" >> "$GITHUB_OUTPUT"
           fi
 
-  # auto-merge:
-  #   needs:
-  #     - sync-branch
-  #     - lint-gate
-  #   if: ${{ needs.sync-branch.outputs.HAS_CHANGES == 'true' && needs.sync-branch.outputs.PR_NUMBER != '' }}
-  #   runs-on: ${{ vars.DEFAULT_RUNNER }}
-  #   timeout-minutes: ${{ fromJSON(vars.DEFAULT_TIMEOUT) }}
+  auto-merge:
+    needs:
+      - sync-branch
+    if: ${{ needs.sync-branch.outputs.HAS_CHANGES == 'true' && needs.sync-branch.outputs.PR_NUMBER != '' }}
+    runs-on: ${{ vars.DEFAULT_RUNNER }}
+    timeout-minutes: ${{ fromJSON(vars.DEFAULT_TIMEOUT) }}
 
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
-  #     - name: Approve pull request
-  #       uses: hmarr/auto-approve-action@8f929096a962e83ccdfa8afcf855f39f12d4dac7 # v4
-  #       with:
-  #         pull-request-number: ${{ needs.sync-branch.outputs.PR_NUMBER }}
-  #         github-token: ${{ secrets.PRORENATA_DEPLOY_TOKEN }}
+      - name: Approve pull request
+        uses: hmarr/auto-approve-action@8f929096a962e83ccdfa8afcf855f39f12d4dac7 # v4
+        with:
+          pull-request-number: ${{ needs.sync-branch.outputs.PR_NUMBER }}
+          github-token: ${{ secrets.PRORENATA_DEPLOY_TOKEN }}
 
-  #     - name: Merge pull request
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GHA_AUTOMATION }} #TODO: Change this to Service account token when the solution is ready.
-  #         PR_NUMBER: ${{ needs.sync-branch.outputs.PR_NUMBER }}
-  #       run: |
-  #         gh pr merge "$PR_NUMBER" --repo "${{ github.repository }}" --merge --auto
+      - name: Merge pull request
+        env:
+          GITHUB_TOKEN: ${{ secrets.GHA_AUTOMATION }} #TODO: Change this to Service account token when the solution is ready.
+          PR_NUMBER: ${{ needs.sync-branch.outputs.PR_NUMBER }}
+        run: |
+          gh pr merge "$PR_NUMBER" --repo "${{ github.repository }}" --merge --auto
 
   # conclude-workflow:
   #   runs-on: ${{ vars.DEFAULT_RUNNER }}
@@ -151,7 +152,6 @@ jobs:
   #   timeout-minutes: ${{ fromJSON(vars.DEFAULT_TIMEOUT) }}
   #   needs:
   #     - sync-branch
-  #     - lint-gate
   #     - auto-merge
 
   #   steps:
