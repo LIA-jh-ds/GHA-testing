@@ -119,21 +119,23 @@ jobs:
       - sync-branch
     if: ${{ needs.sync-branch.outputs.HAS_CHANGES == 'true' && needs.sync-branch.outputs.PR_NUMBER != '' }}
     runs-on: ubuntu-latest
-    timeout-minutes: ${{ fromJSON(vars.DEFAULT_TIMEOUT) }}
+    timeout-minutes: 15
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
-      - name: Approve pull request
-        uses: hmarr/auto-approve-action@8f929096a962e83ccdfa8afcf855f39f12d4dac7 # v4
-        with:
-          pull-request-number: ${{ needs.sync-branch.outputs.PR_NUMBER }}
-          github-token: ${{ secrets.PRORENATA_DEPLOY_TOKEN }}
+      # No "Approve pull request" step here -- the real repo's PRORENATA_DEPLOY_TOKEN
+      # is a *separate* bot identity specifically so it can approve a PR that
+      # GHA_AUTOMATION opened (GitHub blocks self-approval outright). This sandbox has
+      # only one identity (the default GITHUB_TOKEN) to work with, so approval can't be
+      # meaningfully tested here -- skipping straight to merge, which doesn't require
+      # prior approval unless branch protection demands it (unlikely on a basic repo).
 
       - name: Merge pull request
         env:
-          GITHUB_TOKEN: ${{ secrets.GHA_AUTOMATION }} #TODO: Change this to Service account token when the solution is ready.
+          # Auto-provided default token -- no secrets.GHA_AUTOMATION in this repo.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ needs.sync-branch.outputs.PR_NUMBER }}
         run: |
           gh pr merge "$PR_NUMBER" --repo "${{ github.repository }}" --merge --auto
